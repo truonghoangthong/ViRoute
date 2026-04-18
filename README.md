@@ -1,124 +1,143 @@
-<<<<<<< HEAD
-# ViRoute 🚍
- Description: ViRoute is a web app for easy bus bookings with
- real-time tracking. Users can book, pay, and track their rides, while
- operators manage routes and schedules on a single platform.
-
-## Authors 👷
-- [Khoi Do](https://github.com/khoidm2004) (Project Manager + Tester + Deploy)
-- [Dung Nguyen](https://github.com/pingviini314159) (Backend Dev)
-- [Thong Truong](https://github.com/truonghoangthong) (Backend Dev)
-- [Thang Tran](https://github.com/tranthangok) (Designer + Frontend Dev)
-- [Nhi Nguyen](https://github.com/nhingnguyen) (Designer + Frontend Dev)
-
-## Tech stacks 💻
-
-## [Demo▶️]
-=======
 # ViRoute
 
-ViRoute is a web application built using Django and Django REST framework. It provides functionalities for route management, user authentication via GitHub, and more.
+ViRoute is a web app for easy bus bookings with real-time tracking. Users can book, pay, and track their rides, while operators manage routes and schedules on a single platform.
+
+## Authors
+
+- [Khoi Do](https://github.com/khoidm2004) — Project Manager, Tester, Deploy
+- [Dung Nguyen](https://github.com/pingviini314159) — Backend Dev
+- [Thong Truong](https://github.com/truonghoangthong) — Backend Dev
+- [Thang Tran](https://github.com/tranthangok) — Designer, Frontend Dev
+- [Nhi Nguyen](https://github.com/nhingnguyen) — Designer, Frontend Dev
+
+## Tech Stack
+
+- **Backend:** Django 5.1.2, Django REST Framework
+- **Auth:** GitHub OAuth (django-allauth), JWT (djangorestframework-simplejwt)
+- **Database:** MySQL
+- **Deployment:** Railway, Gunicorn
 
 ## Features
 
-- User authentication via GitHub
-- Route management using OpenRouteService API
-- JWT authentication for REST API
-- MySQL database integration
+- User registration and login with bcrypt password hashing
+- GitHub OAuth authentication
+- JWT-based API authentication
+- Bus route search by start/end point
+- Ticket management
+- Favorite places per user
+- Avatar upload and retrieval
+- Password reset via email
+- OpenRouteService API integration for route/map data
 
 ## Requirements
 
 - Python 3.x
-- Django 5.1.2
 - MySQL
 
 ## Installation
 
-1. Clone the repository:
+### 1. Clone the repository
 
-    ```bash
-    git clone https://github.com/khoidm2004/ViRoute
-    git checkout -b Backend # Switch to the Backend branch
-    cd viroute
-    ```
-2. Create a virtual environment and activate it:
+```bash
+git clone https://github.com/khoidm2004/ViRoute
+cd ViRoute
+git checkout Backend
+cd viroute
+```
 
-    ```bash
-    python -m venv venv
-    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-    ```
+### 2. Create and activate a virtual environment
 
-3. Install the required packages:
+```bash
+python -m venv venv
+source venv/bin/activate       # macOS/Linux
+venv\Scripts\activate          # Windows
+```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+### 3. Install dependencies
 
-4. Set up the MySQL database:
+```bash
+pip install -r requirements.txt
+```
 
-    ```sql
-    CREATE DATABASE viroute;
-    CREATE USER 'root'@'localhost' IDENTIFIED BY 'your_password';
-    GRANT ALL PRIVILEGES ON viroute.* TO 'root'@'localhost';
-    FLUSH PRIVILEGES;
-    USE viroute;
-    ```
+### 4. Set up the MySQL database
 
-5. Apply the migrations:
+```sql
+CREATE DATABASE viroute;
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'your_password';
+GRANT ALL PRIVILEGES ON viroute.* TO 'root'@'localhost';
+FLUSH PRIVILEGES;
+```
 
-    ```bash
-    python manage.py migrate
-    ```
+### 5. Configure the database connection
 
-6. Create a superuser:
+Update `viroute/settings.py`:
 
-    ```bash
-    python manage.py createsuperuser
-    ```
-
-7. Run the development server:
-
-    ```bash
-    python manage.py runserver
-    ```
-
-## Configuration
-
-Update the `viroute/settings.py` file with your MySQL database credentials:
-
-```py
+```python
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'viroute',
         'USER': 'root',
-        'PASSWORD': 'your_password', # your_password means your password ^_^! 
+        'PASSWORD': 'your_password',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
 }
 ```
 
-## For changing database table variables
+### 6. Run migrations
 
-1. Delete the migrations folder in the app folder
+```bash
+python manage.py migrate
+```
 
-2. Delete the database
+### 7. (Optional) Seed fake data
 
-    ```sql
-    DROP DATABASE viroute;
-    ```
+```bash
+python fake_data.py
+```
 
-3. Make migrations
+### 8. Create a superuser
 
-    ```bash
-    python manage.py makemigrations
-    python manage.py migrate
-    ```
+```bash
+python manage.py createsuperuser
+```
 
-4. Apply data
-    
-    ```python
-    python run fake_data.py
-    ```
->>>>>>> 592a5eefc14a164ce25a6a058cb521ba155512e2
+### 9. Start the development server
+
+```bash
+python manage.py runserver
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/login/` | Login with email and password |
+| `POST` | `/signup/` | Register a new user |
+| `PUT` | `/update_user/<user_id>/` | Update user information |
+| `GET` | `/tickets/` | List all tickets |
+| `GET` | `/get_image/<image_name>/` | Get image by name |
+| `GET` | `/api/bus_routes/` | Get all bus routes |
+| `POST` | `/api/bus_routes/filter/` | Filter bus routes by start and end point |
+| `POST` | `/fav-place/create/` | Create a favorite place |
+| `GET` | `/fav-place/<user_id>/` | Get favorite places for a user |
+| `PUT` | `/update-avatar/` | Update user avatar |
+| `GET` | `/get-avatar-url/` | Get avatar URL of the current user |
+| `POST` | `/auth/forgot_password/` | Request a password reset email |
+
+## Resetting the Database
+
+If you need to change model fields and reset the database from scratch:
+
+```sql
+DROP DATABASE viroute;
+CREATE DATABASE viroute;
+```
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+python fake_data.py
+```
+
